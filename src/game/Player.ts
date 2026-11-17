@@ -17,7 +17,6 @@ export class Player {
 
   private visual: Phaser.GameObjects.Graphics
   private glow: Phaser.GameObjects.Graphics
-  private trail: Phaser.GameObjects.Graphics[] = []
   private scene: Phaser.Scene
 
   constructor(scene: Phaser.Scene) {
