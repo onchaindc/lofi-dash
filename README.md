@@ -2,8 +2,6 @@
 
 One button. Night colors. Lofi the Yeti.
 
-A rhythm platformer built around feel, not just mechanics.
-
 ## Run
 
 ```bash
@@ -11,21 +9,24 @@ npm install
 npm run dev
 ```
 
-## Current state
+## What’s in right now
 
-- Fixed 240Hz physics step
-- Constant forward speed
-- Jump + gravity
-- Cosmetic spin that snaps on landing
-- Instant death + restart
-- First playable section
-- Lofi as the player character
+- Fixed 240Hz physics
+- Coyote time + jump buffering
+- Cosmetic spin that snaps on land
+- Particle bursts on jump / land / death
+- Camera shake on death
+- Progress bar + attempt counter + best %
+- Mixed spikes + blocks
+- Soft starfield + night atmosphere
+- Lofi as playable character
 
-## Direction
+## Feel targets
 
-Music is the level. Obstacles are choreography.  
-Lofi reacts. Atmosphere shifts with intensity.  
-Near-misses feel good.
+Music is the level.  
+Obstacles are choreography.  
+Near-misses should feel stylish.  
+Death should be instant and restart frictionless.
 
 ## Stack
 
