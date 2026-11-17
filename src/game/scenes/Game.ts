@@ -27,7 +27,6 @@ export class Game extends Phaser.Scene {
   private progressBar!: Phaser.GameObjects.Graphics
   private attemptText!: Phaser.GameObjects.Text
   private bestText!: Phaser.GameObjects.Text
-  private titleText!: Phaser.GameObjects.Text
 
   private sectionLength = 3200
 
@@ -67,7 +66,7 @@ export class Game extends Phaser.Scene {
       })
       .setDepth(20)
 
-    this.titleText = this.add
+    this.add
       .text(GAME.WIDTH / 2, 28, 'LOFI DASH', {
         fontFamily: 'system-ui, sans-serif',
         fontSize: '22px',
