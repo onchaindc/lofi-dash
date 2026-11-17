@@ -7,21 +7,18 @@ const config: Phaser.Types.Core.GameConfig = {
   parent: 'game-container',
   width: 1280,
   height: 720,
-  backgroundColor: '#0a0a12',
+  backgroundColor: '#08080f',
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH
   },
-  physics: {
-    default: 'arcade',
-    arcade: {
-      gravity: { x: 0, y: 0 },
-      debug: false
-    }
-  },
   scene: [Boot, Game],
   input: {
     activePointers: 3
+  },
+  fps: {
+    target: 120,
+    forceSetTimeOut: false
   }
 }
 
