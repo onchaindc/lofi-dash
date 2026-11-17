@@ -3,14 +3,13 @@ import { GAME } from './config'
 
 export class Player {
   public body: Phaser.GameObjects.Container
-  public x = 200
+  public x = 220
   public y = GAME.GROUND_Y - GAME.PLAYER_SIZE / 2
   public vy = 0
   public grounded = true
   public dead = false
   public angle = 0
 
-  // quality-of-life timers
   private coyoteTimer = 0
   private jumpBufferTimer = 0
   private wasGrounded = true
@@ -24,13 +23,9 @@ export class Player {
 
     this.body = scene.add.container(this.x, this.y)
 
-    // soft glow
     this.glow = scene.add.graphics()
-    this.glow.fillStyle(GAME.ACCENT, 0.22)
-    this.glow.fillCircle(0, -6, 36)
     this.body.add(this.glow)
 
-    // Lofi
     this.visual = scene.add.graphics()
     this.drawLofi()
     this.body.add(this.visual)
@@ -40,38 +35,38 @@ export class Player {
     const g = this.visual
     g.clear()
 
-    // body
-    g.fillStyle(0xece8f5, 1)
-    g.fillRoundedRect(-21, -16, 42, 38, 11)
+    // main body - chunkier
+    g.fillStyle(0xf1eef8, 1)
+    g.fillRoundedRect(-26, -20, 52, 46, 14)
 
     // head
-    g.fillStyle(0xf5f2fa, 1)
-    g.fillCircle(0, -26, 19)
+    g.fillStyle(0xf8f6fc, 1)
+    g.fillCircle(0, -32, 24)
 
     // ears
-    g.fillStyle(0xd8d2e8, 1)
-    g.fillCircle(-15, -34, 7.5)
-    g.fillCircle(15, -34, 7.5)
+    g.fillStyle(0xddd6f0, 1)
+    g.fillCircle(-19, -42, 10)
+    g.fillCircle(19, -42, 10)
 
-    // inner ears
-    g.fillStyle(0xc4b5fd, 0.5)
-    g.fillCircle(-15, -34, 3.5)
-    g.fillCircle(15, -34, 3.5)
+    // inner ear color
+    g.fillStyle(0xa78bfa, 0.55)
+    g.fillCircle(-19, -42, 4.5)
+    g.fillCircle(19, -42, 4.5)
 
-    // eyes
+    // eyes - stronger glow
     g.fillStyle(GAME.ACCENT_GLOW, 1)
-    g.fillCircle(-6.5, -28, 4.2)
-    g.fillCircle(6.5, -28, 4.2)
+    g.fillCircle(-8, -34, 5.5)
+    g.fillCircle(8, -34, 5.5)
 
     // pupils
     g.fillStyle(0x0a0a12, 1)
-    g.fillCircle(-6.5, -28, 1.9)
-    g.fillCircle(6.5, -28, 1.9)
+    g.fillCircle(-8, -34, 2.3)
+    g.fillCircle(8, -34, 2.3)
 
-    // soft smile
-    g.lineStyle(2.2, 0x2e2a3a, 0.75)
+    // mouth
+    g.lineStyle(2.5, 0x2a2438, 0.8)
     g.beginPath()
-    g.arc(0, -20, 5.5, 0.2, Math.PI - 0.2)
+    g.arc(0, -24, 7, 0.25, Math.PI - 0.25)
     g.strokePath()
   }
 
@@ -96,13 +91,12 @@ export class Player {
 
   step(dt: number) {
     if (this.dead) {
-      this.vy += GAME.GRAVITY * dt * 0.6
+      this.vy += GAME.GRAVITY * dt * 0.55
       this.y += this.vy * dt
       this.body.setPosition(this.x, this.y)
       return
     }
 
-    // timers
     if (!this.grounded) {
       this.coyoteTimer = Math.max(0, this.coyoteTimer - dt)
     }
@@ -121,7 +115,6 @@ export class Player {
       this.vy = 0
 
       if (!this.wasGrounded) {
-        // just landed
         this.angle = Math.round(this.angle / 90) * 90
         this.spawnLandParticles()
       }
@@ -131,38 +124,37 @@ export class Player {
       this.wasGrounded = true
     } else {
       if (this.wasGrounded) {
-        // just left ground
         this.coyoteTimer = GAME.COYOTE_TIME
       }
       this.grounded = false
       this.wasGrounded = false
-      this.angle += 480 * dt
+      this.angle += 520 * dt
     }
 
     this.body.setPosition(this.x, this.y)
     this.body.setAngle(this.angle)
 
-    // subtle glow pulse
-    const pulse = 0.18 + Math.sin(this.scene.time.now / 280) * 0.04
+    // stronger glow
+    const pulse = 0.25 + Math.sin(this.scene.time.now / 240) * 0.06
     this.glow.clear()
     this.glow.fillStyle(GAME.ACCENT, pulse)
-    this.glow.fillCircle(0, -6, 36)
+    this.glow.fillCircle(0, -8, 42)
   }
 
   private spawnJumpParticles() {
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 8; i++) {
       const p = this.scene.add.graphics()
-      p.fillStyle(GAME.ACCENT_GLOW, 0.7)
-      p.fillCircle(0, 0, 3 + Math.random() * 2)
-      p.setPosition(this.x + (Math.random() - 0.5) * 20, this.y + 18)
+      p.fillStyle(GAME.ACCENT_GLOW, 0.85)
+      p.fillCircle(0, 0, 3.5 + Math.random() * 2.5)
+      p.setPosition(this.x + (Math.random() - 0.5) * 24, this.y + 22)
 
       this.scene.tweens.add({
         targets: p,
-        x: p.x + (Math.random() - 0.5) * 40,
-        y: p.y + 20 + Math.random() * 30,
+        x: p.x + (Math.random() - 0.5) * 50,
+        y: p.y + 25 + Math.random() * 35,
         alpha: 0,
-        scale: 0.2,
-        duration: 280 + Math.random() * 120,
+        scale: 0.15,
+        duration: 300 + Math.random() * 140,
         ease: 'Power2',
         onComplete: () => p.destroy()
       })
@@ -170,18 +162,18 @@ export class Player {
   }
 
   private spawnLandParticles() {
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 5; i++) {
       const p = this.scene.add.graphics()
-      p.fillStyle(0xc4b5fd, 0.5)
-      p.fillCircle(0, 0, 2.5)
-      p.setPosition(this.x + (Math.random() - 0.5) * 28, this.y + 20)
+      p.fillStyle(0xc4b5fd, 0.6)
+      p.fillCircle(0, 0, 3)
+      p.setPosition(this.x + (Math.random() - 0.5) * 32, this.y + 24)
 
       this.scene.tweens.add({
         targets: p,
-        x: p.x + (Math.random() - 0.5) * 50,
-        y: p.y - 8,
+        x: p.x + (Math.random() - 0.5) * 60,
+        y: p.y - 10,
         alpha: 0,
-        duration: 220,
+        duration: 240,
         ease: 'Power2',
         onComplete: () => p.destroy()
       })
@@ -191,17 +183,16 @@ export class Player {
   die() {
     if (this.dead) return
     this.dead = true
-    this.vy = -280
+    this.vy = -320
 
-    // death burst
-    for (let i = 0; i < 14; i++) {
+    for (let i = 0; i < 18; i++) {
       const p = this.scene.add.graphics()
-      p.fillStyle(GAME.ACCENT_GLOW, 0.9)
-      p.fillCircle(0, 0, 2 + Math.random() * 3)
+      p.fillStyle(GAME.ACCENT_GLOW, 0.95)
+      p.fillCircle(0, 0, 2.5 + Math.random() * 3.5)
       p.setPosition(this.x, this.y)
 
       const angle = Math.random() * Math.PI * 2
-      const speed = 80 + Math.random() * 160
+      const speed = 90 + Math.random() * 180
 
       this.scene.tweens.add({
         targets: p,
@@ -209,7 +200,7 @@ export class Player {
         y: this.y + Math.sin(angle) * speed,
         alpha: 0,
         scale: 0.1,
-        duration: 320 + Math.random() * 180,
+        duration: 340 + Math.random() * 200,
         ease: 'Power3',
         onComplete: () => p.destroy()
       })
@@ -217,18 +208,17 @@ export class Player {
 
     this.scene.tweens.add({
       targets: this.body,
-      alpha: 0.15,
-      scale: 0.55,
-      duration: 200,
+      alpha: 0.12,
+      scale: 0.5,
+      duration: 180,
       ease: 'Power2'
     })
 
-    // camera shake
-    this.scene.cameras.main.shake(160, 0.012)
+    this.scene.cameras.main.shake(180, 0.014)
   }
 
   reset() {
-    this.x = 200
+    this.x = 220
     this.y = GAME.GROUND_Y - GAME.PLAYER_SIZE / 2
     this.vy = 0
     this.grounded = true
